@@ -38,7 +38,7 @@ def process_review_step(message):
     feedback_message = message.text
     database.add_review(username, feedback_message)
     bot.reply_to(message, strings.review_end_message)
-    bot.send_message(secret.admin_id, "Новый заказ!")
+    bot.send_message(secret.admin_id, strings.review_admin_message)
 
 
 @bot.message_handler(commands=['help'])
@@ -63,6 +63,7 @@ def process_order_request_step(message, room_number):
     request_string = message.text
     database.add_order(username, room_number, request_string)
     bot.reply_to(message, strings.order_end_message)
+    bot.send_message(secret.admin_id, strings.order_admin_message)
 
 
 @bot.message_handler()
