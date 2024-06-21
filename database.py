@@ -73,3 +73,35 @@ def add_order(username, room_number, request_string):
                    (username, room_id, request_string))
     conn.commit()
     conn.close()
+
+
+def get_all_reviews():
+    conn = sqlite3.connect(secret.db_connection_string)
+    cursor = conn.cursor()
+    cursor.execute('SELECT username, feedback_message FROM reviews')
+    reviews = cursor.fetchall()
+    conn.close()
+    return reviews
+
+
+def get_rooms_with_orders():
+    conn = sqlite3.connect(secret.db_connection_string)
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT r.room_number, o.username, o.request_string, o.id
+        FROM rooms r
+        INNER JOIN orders o ON r.room_id = o.room_id
+    ''')
+    rooms_with_orders = cursor.fetchall()
+    conn.close()
+    return rooms_with_orders
+
+
+def delete_order(order_id):
+    conn = sqlite3.connect(secret.db_connection_string)
+    cursor = conn.cursor()
+    cursor.execute(f'''
+            DELETE FROM orders WHERE id = {order_id}
+        ''')
+    conn.commit()
+    conn.close()
